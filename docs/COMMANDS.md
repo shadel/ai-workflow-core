@@ -1,0 +1,575 @@
+# AI Workflow Commands Reference
+
+**Version:** 3.1.1  
+**Last Updated:** 2025-11-14  
+**Purpose:** Help AI assistants discover and use workflow commands
+
+---
+
+## 🤖 For AI Assistants
+
+This file helps you understand available ai-workflow commands and when to use them.
+
+### Quick Command Map
+
+**When user says → You run:**
+
+| User Request | Command | Example |
+|--------------|---------|---------|
+| "Start task" / "Create task" | `task create` | `npx ai-workflow task create "Add login"` |
+| "What's my task?" / "Check status" | `task status` | `npx ai-workflow task status` |
+| "I'm done" / "Mark complete" | `task complete` | `npx ai-workflow task complete` |
+| "Update progress" / "Sync" | `sync` | `npx ai-workflow sync --state TESTING` |
+| "Ready to commit?" / "Validate" | `validate` | `npx ai-workflow validate` |
+| "Remember this" / "Save pattern" | `pattern add` | `npx ai-workflow pattern add "..." -c "..."` |
+| "Show patterns" | `pattern list` | `npx ai-workflow pattern list` |
+
+---
+
+## 📚 Full Command Reference
+
+### 1. Task Management
+
+#### `task create "<goal>"`
+
+**Purpose:** Create a new workflow task
+
+**Usage:**
+```bash
+npx ai-workflow task create "<goal description>"
+```
+
+**When to use:**
+- User starts new feature
+- Beginning of work session
+- New bug fix
+- Refactoring work
+
+**What it does:**
+1. Creates task with unique ID
+2. Sets initial state to UNDERSTANDING
+3. Generates `.ai-context/STATUS.txt`
+4. Generates `.ai-context/NEXT_STEPS.md`
+5. Activates relevant expert roles based on task keywords
+
+**Examples:**
+```bash
+npx ai-workflow task create "Add user authentication with JWT"
+npx ai-workflow task create "Fix login redirect bug"
+npx ai-workflow task create "Refactor user service for testability"
+```
+
+**Success indicators:**
+- ✅ Task ID displayed
+- ✅ STATUS.txt created
+- ✅ NEXT_STEPS.md created with role checklists
+
+---
+
+#### `task status`
+
+**Purpose:** Show current task and workflow state
+
+**Usage:**
+```bash
+npx ai-workflow task status
+npx ai-workflow task status --json  # JSON format
+```
+
+**When to use:**
+- User asks "what am I working on?"
+- Need to check current state
+- Verify progress
+- Anytime during work
+
+**Output shows:**
+- Task ID and goal
+- Current workflow state
+- Time elapsed
+- Next recommended actions
+
+**Alternative:**
+Can also directly read `.ai-context/STATUS.txt` for same information.
+
+**Examples:**
+```bash
+# Check current task
+npx ai-workflow task status
+
+# Get JSON output (for parsing)
+npx ai-workflow task status --json
+```
+
+---
+
+#### `task complete`
+
+**Purpose:** Mark current task as completed
+
+**Usage:**
+```bash
+npx ai-workflow task complete
+```
+
+**When to use:**
+- After successful commit
+- All work is done
+- Ready to move to next task
+
+**Prerequisites:**
+- Task must exist
+- Preferably at READY_TO_COMMIT state (but not required)
+- Code should be committed
+
+**What it does:**
+1. Marks task as completed
+2. Records completion time
+3. Archives task data
+4. Clears STATUS.txt
+
+**Note:** Can complete at any state, but recommended to complete full workflow.
+
+---
+
+### 2. Workflow State Management
+
+#### `sync`
+
+**Purpose:** Synchronize and update workflow state
+
+**Usage:**
+```bash
+# Auto-detect state based on current work
+npx ai-workflow sync
+
+# Manually set specific state
+npx ai-workflow sync --state <STATE_NAME>
+```
+
+**When to use:**
+- Moving between workflow phases
+- After completing a phase
+- When state needs updating
+
+**Available states:**
+1. `UNDERSTANDING` - Gathering requirements, asking questions
+2. `DESIGNING` - Planning architecture and design
+3. `IMPLEMENTING` - Writing production code
+4. `TESTING` - Writing tests
+5. `REVIEWING` - Reviewing code quality
+6. `READY_TO_COMMIT` - Validated and ready to commit
+
+**Examples:**
+```bash
+# Auto-detect
+npx ai-workflow sync
+
+# Move to specific state
+npx ai-workflow sync --state IMPLEMENTING
+npx ai-workflow sync --state TESTING
+npx ai-workflow sync --state READY_TO_COMMIT
+```
+
+**State progression:**
+```
+UNDERSTANDING → DESIGNING → IMPLEMENTING → TESTING → REVIEWING → READY_TO_COMMIT
+```
+
+**Important:** States should progress sequentially. Jumping states may indicate skipped work.
+
+---
+
+#### `validate`
+
+**Purpose:** Run quality validation before commit
+
+**Usage:**
+```bash
+npx ai-workflow validate
+```
+
+**When to use:**
+- Before ANY git commit (mandatory!)
+- After completing REVIEWING phase
+- To check if ready to commit
+
+**What it validates:**
+- Task exists and is active
+- Workflow state is appropriate
+- Required files present
+- Quality gates passed
+
+**Output:**
+- ✅ All validations passed → Safe to commit
+- ❌ Validation failed → Shows what needs fixing
+
+**Important:** This is automatically run by pre-commit git hook, but good to run manually first.
+
+**Examples:**
+```bash
+# Check if ready to commit
+npx ai-workflow validate
+
+# If passes:
+git commit -m "feat: add feature"
+
+# If fails:
+# Fix issues shown, then validate again
+```
+
+---
+
+### 3. Pattern Management
+
+#### `pattern add`
+
+**Purpose:** Save a learned pattern or convention
+
+**Usage:**
+```bash
+npx ai-workflow pattern add "<title>" -c "<content>" [options]
+```
+
+**Options:**
+- `-c, --content <text>` - Pattern content (required)
+- `-s, --source <source>` - Source project or context
+- `--score <1-5>` - Pattern importance (default: 5)
+
+**When to use:**
+- User corrects AI repeatedly for same thing
+- Establishing project convention
+- Best practice to remember
+- Code style preference
+
+**Examples:**
+```bash
+# Style pattern
+npx ai-workflow pattern add "Use async/await" \
+  -c "Always use async/await, never .then() chains or callbacks" \
+  --score 5
+
+# Structure pattern
+npx ai-workflow pattern add "Service file location" \
+  -c "Place all services in src/core/services/ with format {name}.service.ts" \
+  --source "project-convention"
+
+# Security pattern
+npx ai-workflow pattern add "Input validation" \
+  -c "Always validate user input before processing. Use zod or joi for schema validation" \
+  --score 5
+```
+
+**What happens:**
+1. Pattern saved to `.ai-context/patterns.json`
+2. Cursor reads patterns in next conversation
+3. AI follows pattern automatically
+
+---
+
+#### `pattern list`
+
+**Purpose:** Show all saved patterns
+
+**Usage:**
+```bash
+npx ai-workflow pattern list
+npx ai-workflow pattern list --json  # JSON format
+```
+
+**When to use:**
+- User asks "what patterns do we have?"
+- Review established conventions
+- Check if pattern exists
+
+**Output shows:**
+- Pattern ID
+- Title
+- Source (if specified)
+- Score
+- Creation date
+
+---
+
+#### `pattern search`
+
+**Purpose:** Search patterns by keyword
+
+**Usage:**
+```bash
+npx ai-workflow pattern search <query>
+```
+
+**Examples:**
+```bash
+npx ai-workflow pattern search "async"
+npx ai-workflow pattern search "service"
+npx ai-workflow pattern search "validation"
+```
+
+---
+
+#### `pattern delete`
+
+**Purpose:** Remove a pattern
+
+**Usage:**
+```bash
+npx ai-workflow pattern delete <pattern-id>
+```
+
+**When to use:**
+- Pattern no longer relevant
+- Incorrect pattern
+- Outdated convention
+
+---
+
+#### `pattern info`
+
+**Purpose:** Show detailed information about a pattern
+
+**Usage:**
+```bash
+npx ai-workflow pattern info <pattern-id>
+```
+
+---
+
+### 4. Utilities
+
+#### `help`
+
+**Purpose:** Get detailed help for commands
+
+**Usage:**
+```bash
+npx ai-workflow help
+npx ai-workflow help [command]
+```
+
+**Examples:**
+```bash
+npx ai-workflow help
+npx ai-workflow help task
+npx ai-workflow help pattern add
+```
+
+---
+
+#### `init`
+
+**Purpose:** Initialize ai-workflow in a project
+
+**Usage:**
+```bash
+npx ai-workflow init [options]
+```
+
+**Options:**
+- `--minimal` - Minimal setup (no examples)
+- `--starter` - Include starter patterns
+- `--yes` - Skip prompts
+
+**When to use:**
+- First time setup in new project
+- Re-initialize after issues
+
+**What it creates:**
+- `.ai-context/` directory
+- `.cursor/rules/` with behavior rules
+- `docs/learned-knowledge/` templates
+- `.git/hooks/pre-commit` validation
+
+---
+
+#### `upgrade`
+
+**Purpose:** Check for package updates
+
+**Usage:**
+```bash
+npx ai-workflow upgrade
+```
+
+---
+
+## 🔄 Typical Workflows
+
+### Basic Task Flow
+
+```bash
+# 1. Start
+npx ai-workflow task create "Add dark mode toggle"
+
+# 2. Design
+npx ai-workflow sync --state DESIGNING
+
+# 3. Implement
+npx ai-workflow sync --state IMPLEMENTING
+# ... write code ...
+
+# 4. Test
+npx ai-workflow sync --state TESTING
+# ... write tests ...
+
+# 5. Review
+npx ai-workflow sync --state REVIEWING
+
+# 6. Validate
+npx ai-workflow validate
+
+# 7. Commit
+git add .
+git commit -m "feat: add dark mode toggle"
+
+# 8. Complete
+npx ai-workflow task complete
+```
+
+---
+
+### Quick Fix Flow
+
+```bash
+# 1. Start
+npx ai-workflow task create "Fix button alignment"
+
+# 2. Implement (skip design for small fix)
+npx ai-workflow sync --state IMPLEMENTING
+# ... fix code ...
+
+# 3. Test
+npx ai-workflow sync --state TESTING
+# ... verify fix ...
+
+# 4. Validate & Commit
+npx ai-workflow validate
+git commit -m "fix: button alignment"
+npx ai-workflow task complete
+```
+
+---
+
+### Pattern Learning Flow
+
+```bash
+# User corrects AI
+User: "Always use logger.error(), not console.log()"
+
+# AI saves pattern
+npx ai-workflow pattern add "Use structured logging" \
+  -c "Always use logger.error/warn/info/debug from logger service. Never use console.log/error" \
+  --score 5
+
+# Pattern applied in future
+# AI will automatically use logger.error() next time
+```
+
+---
+
+## 🗂️ Important Files
+
+### Files AI Should Read
+
+- **`.ai-context/STATUS.txt`** - Current task and state (read first!)
+- **`.ai-context/NEXT_STEPS.md`** - What to do next, role checklists
+- **`.ai-context/patterns.json`** - Learned patterns and conventions
+- **`.ai-context/COMMANDS.md`** - This file (command reference)
+
+### Files AI Should Know About
+
+- **`.cursor/rules/*.mdc`** - Cursor behavior rules (enforced automatically)
+- **`.git/hooks/pre-commit`** - Validation runs before commits
+- **`docs/learned-knowledge/`** - Learning templates
+
+---
+
+## ❓ Troubleshooting
+
+### "No active task"
+
+**Problem:** Trying to use commands without a task
+
+**Solution:**
+```bash
+npx ai-workflow task create "<goal>"
+```
+
+---
+
+### "Invalid state transition"
+
+**Problem:** Trying to skip workflow states
+
+**Solution:** Progress sequentially through states:
+```bash
+# Current: UNDERSTANDING
+npx ai-workflow sync --state DESIGNING  # ✅
+npx ai-workflow sync --state IMPLEMENTING  # ❌ Skip!
+
+# Correct:
+npx ai-workflow sync --state DESIGNING
+npx ai-workflow sync --state IMPLEMENTING
+```
+
+---
+
+### "Validation failed"
+
+**Problem:** Quality gates not met
+
+**Solution:**
+1. Read validation error messages
+2. Fix issues identified
+3. Run validation again
+4. Commit only after validation passes
+
+---
+
+### "Pattern not found"
+
+**Problem:** Trying to access non-existent pattern
+
+**Solution:**
+```bash
+# List all patterns first
+npx ai-workflow pattern list
+
+# Use correct pattern ID
+npx ai-workflow pattern info <correct-id>
+```
+
+---
+
+## 💡 Tips for AI Assistants
+
+### DO:
+- ✅ Read `.ai-context/STATUS.txt` every conversation
+- ✅ Follow patterns in `.ai-context/patterns.json`
+- ✅ Suggest appropriate commands based on context
+- ✅ Run `validate` before suggesting commits
+- ✅ Create patterns when user corrects repeatedly
+
+### DON'T:
+- ❌ Suggest commits without validation
+- ❌ Skip workflow states
+- ❌ Ignore active patterns
+- ❌ Forget to read STATUS.txt
+- ❌ Use `--no-verify` flag on commits
+
+---
+
+## 📖 More Information
+
+- **Full Documentation:** `node_modules/@shadel/ai-workflow-core/README.md`
+- **Cursor Integration:** `.cursor/rules/004-workflow-commands.mdc`
+- **GitHub:** https://github.com/shadel/ai-workflow-engine
+- **npm:** https://www.npmjs.com/package/@shadel/ai-workflow-core
+
+---
+
+**Last Updated:** 2025-11-14  
+**Version:** 3.1.1  
+**Purpose:** AI command discovery and guidance
+
+

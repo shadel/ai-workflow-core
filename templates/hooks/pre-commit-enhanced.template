@@ -1,0 +1,144 @@
+#!/bin/sh
+# ai-workflow-engine pre-commit hook (Enhanced for AI Memory)
+# Auto-installed by: npx ai-workflow init
+
+# ============================================================================
+# 🤖 AI WORKFLOW ENGINE - PRE-COMMIT VALIDATION
+# ============================================================================
+# This hook ensures workflow compliance before commits.
+# It will BLOCK commits that don't meet quality gates.
+# ============================================================================
+
+echo ""
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║ 🤖 AI WORKFLOW ENGINE - Pre-Commit Validation                        ║"
+echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo ""
+
+# Get project root
+ROOT_DIR=$(git rev-parse --show-toplevel)
+
+# Check if ai-workflow-engine is installed
+if ! command -v npx > /dev/null 2>&1; then
+  echo "❌ Error: npx not found. Please install Node.js."
+  exit 1
+fi
+
+# Run unified validation (v1.5)
+echo "🔍 Checking workflow compliance..."
+echo ""
+
+# FR-011: Check if task exists, auto-create if not
+if [ ! -f .ai-context/current-task.json ]; then
+  echo "⚠️  No active workflow task detected"
+  echo ""
+  
+  # Get the commit message that's about to be committed
+  COMMIT_MSG_FILE=".git/COMMIT_EDITMSG"
+  
+  if [ -f "$COMMIT_MSG_FILE" ]; then
+    COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+    
+    echo "🔧 Auto-creating task from commit message..."
+    echo "   Message: $COMMIT_MSG"
+    echo ""
+    
+    # Create task using commit message parser
+    npx ai-workflow task create "$COMMIT_MSG" --auto-from-commit
+    
+    if [ $? -eq 0 ]; then
+      echo "✅ Task created automatically!"
+      echo ""
+    else
+      echo "❌ Failed to create task automatically"
+      echo "   Please create manually: npx ai-workflow task create \"<description>\""
+      echo ""
+      exit 1
+    fi
+  else
+    echo "❌ No commit message found"
+    echo "   Please create task: npx ai-workflow task create \"<description>\""
+    echo ""
+    exit 1
+  fi
+fi
+
+# Run validation with enhanced output
+npx ai-workflow validate --pre-commit 2>&1
+
+VALIDATION_EXIT=$?
+
+echo ""
+
+# If validation failed
+if [ $VALIDATION_EXIT -ne 0 ]; then
+  echo "╔══════════════════════════════════════════════════════════════════════╗"
+  echo "║ ❌ COMMIT BLOCKED - Workflow Validation Failed                       ║"
+  echo "╚══════════════════════════════════════════════════════════════════════╝"
+  echo ""
+  echo "⚠️  IMPORTANT: This project uses ai-workflow-engine for quality control."
+  echo ""
+  echo "📋 Common Issues & Solutions:"
+  echo ""
+  echo "   1️⃣  No Active Task:"
+  echo "      Problem: You're committing without a workflow task"
+  echo "      Fix: npx ai-workflow task create \"<describe your work>\""
+  echo "      Then: git commit again"
+  echo ""
+  echo "   2️⃣  Workflow State Out of Sync:"
+  echo "      Problem: Your workflow state doesn't match your changes"
+  echo "      Fix: npx ai-workflow sync"
+  echo "      Then: git commit again"
+  echo ""
+  echo "   3️⃣  Low Test Coverage (P0 Requirements):"
+  echo "      Problem: Critical requirements need tests"
+  echo "      Fix: Add tests to __tests__/"
+  echo "      Then: git commit again"
+  echo ""
+  echo "   4️⃣  Missing Requirement Links:"
+  echo "      Problem: Code doesn't reference requirements"
+  echo "      Fix: Add @requirement FR-XXX comments to code"
+  echo "      Then: git commit again"
+  echo ""
+  echo "💡 Quick Check:"
+  echo "   Status: npx ai-workflow task status"
+  echo "   Sync: npx ai-workflow sync"
+  echo "   Validate: npx ai-workflow validate"
+  echo ""
+  echo "🔓 Override (Use Carefully!):"
+  echo "   git commit --no-verify -m \"your message\""
+  echo ""
+  echo "   ⚠️  WARNING: Bypassing validation should be rare!"
+  echo "   Use only for:"
+  echo "   - Documentation updates"
+  echo "   - Configuration changes"
+  echo "   - Emergency hotfixes"
+  echo ""
+  echo "   MUST document bypass reason in commit message!"
+  echo ""
+  echo "📖 Learn More:"
+  echo "   Guide: docs/guides/HOW_TO_REMIND_AI.md"
+  echo "   Status: cat .ai-context/current-task.json"
+  echo "   Help: npx ai-workflow --help"
+  echo ""
+  echo "╚══════════════════════════════════════════════════════════════════════╝"
+  echo ""
+  
+  exit 1
+fi
+
+# If validation passed
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║ ✅ Workflow Validation Passed                                        ║"
+echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo ""
+echo "💡 Next Steps After Commit:"
+echo "   - Run: npx ai-workflow sync (to update evidence)"
+echo "   - Check: npx ai-workflow task status"
+echo ""
+echo "⚠️  Don't forget to complete your task when all work is done:"
+echo "   npx ai-workflow task complete"
+echo ""
+
+exit 0
+

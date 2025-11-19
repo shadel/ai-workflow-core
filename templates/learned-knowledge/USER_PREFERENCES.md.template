@@ -1,0 +1,112 @@
+# User Preferences & Patterns
+
+**Purpose**: Store user's working style, preferences, and patterns  
+**Usage**: AI reads this to personalize workflow to user's style  
+**Update**: Add/modify as you learn more about user's preferences
+
+---
+
+## 👤 User Profile
+
+**Name**: [Your name]  
+**Role**: [Developer / Team Lead / etc.]  
+**Project Type**: [Web App / API / CLI / etc.]  
+**Team Size**: [Solo / Small / Medium / Large]
+
+---
+
+## 🎯 Working Style
+
+### **Communication Preferences**:
+- Preferred language: [English / Vietnamese / etc.]
+- Detail level: [Concise / Detailed / Very Detailed]
+- Explanation style: [Technical / Simple / Mixed]
+
+### **Workflow Preferences**:
+- Commit frequency: [After each feature / Daily / When ready]
+- Testing approach: [TDD / After implementation / Manual]
+- Documentation: [Inline / Separate docs / Both]
+
+### **Code Style**:
+- Language: [TypeScript / JavaScript / Python / etc.]
+- Framework: [Next.js / Express / FastAPI / etc.]
+- Formatting: [Prettier / ESLint / etc.]
+
+---
+
+## 🚀 Automation Preferences
+
+### **What to Auto-Complete**:
+- ✅ [Tasks user wants automated]
+- ✅ [Operations that don't need confirmation]
+
+### **What to Ask Permission**:
+- ⚠️ [Tasks requiring user approval]
+- ⚠️ [Destructive operations]
+
+---
+
+## 🛠️ Tool Preferences
+
+### **Preferred Tools**:
+- Editor: [VS Code / Cursor / etc.]
+- Terminal: [Bash / Zsh / PowerShell]
+- Package Manager: [npm / yarn / pnpm]
+- Version Control: [Git / etc.]
+
+### **Avoided Tools**:
+- [Tools user prefers not to use]
+
+---
+
+## 📝 Documentation Style
+
+### **Preferred Format**:
+- Language: [Vietnamese / English / Mixed]
+- Structure: [README / Wiki / Inline]
+- Detail: [High / Medium / Low]
+
+---
+
+## 🎨 UI/UX Preferences (if applicable)
+
+### **Design Style**:
+- Framework: [Tailwind / Material-UI / etc.]
+- Color scheme: [Dark / Light / System]
+- Components: [Custom / Library]
+
+---
+
+## ⚡ Performance Priorities
+
+### **What Matters Most**:
+1. [Speed / Quality / Maintainability]
+2. [Second priority]
+3. [Third priority]
+
+---
+
+## 🐛 Debugging Style
+
+### **Preferred Approach**:
+- Logging: [Console / File / Both]
+- Testing: [Unit / Integration / E2E]
+- Debugging tools: [DevTools / Debugger / etc.]
+
+---
+
+## 📊 Project-Specific Patterns
+
+### **Common Tasks**:
+- [Frequently repeated tasks]
+- [Typical workflows]
+
+### **Common Mistakes to Avoid**:
+- [Things that often go wrong]
+- [Patterns that cause issues]
+
+---
+
+**This file helps AI work the way YOU work.** 🎯  
+**Keep it updated as your preferences evolve!**
+

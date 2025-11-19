@@ -1,0 +1,143 @@
+---
+description: "AI Workflow Engine - Apply State-Specific Behavior Based on Current Workflow State"
+globs: "**/*"
+alwaysApply: true
+priority: 2
+version: 1.0.0
+tags: [workflow, states, behavior, mandatory]
+---
+
+# 🔄 WORKFLOW STATES - BEHAVIOR ENFORCEMENT
+
+⚠️  **CRITICAL:** State-based behavior (alwaysApply: true)
+
+## 📊 SIX WORKFLOW STATES
+
+After reading STATUS.txt, you know current state.
+Apply corresponding behavior:
+
+### 🔵 UNDERSTANDING State
+```
+Meaning: Requirements being analyzed, no design yet
+
+Your Behavior:
+  ✅ Ask clarifying questions
+  ✅ Understand requirements fully
+  ✅ Identify ambiguities
+  
+  ❌ DON'T start coding yet
+  ❌ DON'T make assumptions
+  ❌ DON'T suggest commits
+
+When to progress: User confirms understanding complete
+```
+
+### 🟢 DESIGNING State
+```
+Meaning: Design approved, ready to implement
+
+Your Behavior:
+  ✅ Follow approved design/architecture
+  ✅ Implement according to plan
+  ✅ Create planned files
+  
+  ❌ DON'T change architecture without discussion
+  ❌ DON'T suggest commits yet (no tests!)
+
+When to progress: Implementation complete
+```
+
+### 🟡 IMPLEMENTING State
+```
+Meaning: Code written, tests needed
+
+Your Behavior:
+  ✅ Write comprehensive unit tests
+  ✅ Write integration tests if needed
+  ✅ Test edge cases
+  ✅ Ensure coverage >70%
+  
+  ❌ DON'T skip tests (MANDATORY!)
+  ❌ DON'T suggest commits without tests
+  ❌ DON'T say "tests can be added later"
+
+When to progress: All tests written and passing
+```
+
+### 🟠 TESTING State
+```
+Meaning: Tests passing, needs review
+
+Your Behavior:
+  ✅ Review code for quality
+  ✅ Check requirements all satisfied
+  ✅ Look for potential improvements
+  ✅ Verify test coverage adequate
+  
+  ❌ DON'T skip review
+  ❌ DON'T suggest commits yet
+
+When to progress: Review complete, quality confirmed
+```
+
+### 🔴 REVIEWING State
+```
+Meaning: Ready for validation
+
+Your Behavior:
+  ✅ Run: npx ai-workflow validate
+  ✅ Check validation passes
+  ✅ Fix any validation issues
+  
+  ❌ DON'T suggest commits without validation
+  ❌ NEVER skip validation
+
+When to progress: Validation passes
+```
+
+### 🟣 READY_TO_COMMIT State
+```
+Meaning: Validation passed, safe to commit
+
+Your Behavior:
+  ✅ Suggest commit with good message
+  ✅ Include task reference
+  ✅ Remind to complete task after
+  
+  ❌ DON'T suggest --no-verify
+  ❌ DON'T bypass quality gates
+
+After commit: Remind user to run npx ai-workflow task complete
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚫 CRITICAL: State-Based Restrictions
+
+**NEVER suggest commits unless state is READY_TO_COMMIT:**
+
+```
+If state is UNDERSTANDING:
+  Response: "We're still in UNDERSTANDING state. Let's finalize requirements first."
+
+If state is DESIGNING:
+  Response: "Design is ready but no code yet. Let me implement first."
+
+If state is IMPLEMENTING:
+  Response: "Code is ready but needs tests. Let me add tests first."
+
+If state is TESTING:
+  Response: "Tests pass but needs review. Let me review quality first."
+
+If state is REVIEWING:
+  Response: "Review done. Let me run validation: npx ai-workflow validate"
+
+Only if state is READY_TO_COMMIT:
+  Response: "✓ Validation passed! Safe to commit: git commit -m 'feat: ...'"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**This rule uses alwaysApply: true**  
+**State-based behavior is MANDATORY**  
+**Prevents premature commits and skipped quality gates**

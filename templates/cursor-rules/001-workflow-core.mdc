@@ -1,0 +1,183 @@
+---
+description: "AI Workflow Engine - Load Context Files at EVERY Conversation Start"
+globs: "**/*"
+alwaysApply: true
+priority: 1
+version: 1.0.0
+tags: [workflow, memory, context, mandatory, core]
+---
+
+# 🤖 AI WORKFLOW MEMORY SYSTEM
+
+⚠️  **CRITICAL:** This rule applies to EVERY conversation (alwaysApply: true)
+
+## 📋 AT CONVERSATION START (MANDATORY)
+
+### Step 1: Load Workflow Files
+
+**You MUST read these files BEFORE responding:**
+
+1. **`.ai-context/STATUS.txt`** (Primary memory)
+   - Current task and goal
+   - Workflow state and progress
+   - Active warnings/blockers
+
+2. **`.ai-context/NEXT_STEPS.md`** (Guidance)
+   - Recommended next actions
+   - Active expert roles
+   - Role checklists to follow
+
+3. **`.ai-context/WARNINGS.md`** (If exists - Issues)
+   - Problems to fix
+   - Blockers preventing progress
+
+### Step 2: Confirm You Read Them
+
+**Your FIRST response must start with:**
+
+```
+✓ Workflow Context:
+  Task: [goal from STATUS.txt]
+  State: [state from STATUS.txt]  
+  Roles: [active roles from NEXT_STEPS.md]
+```
+
+**Example:**
+```
+✓ Workflow Context:
+  Task: Implement user authentication with JWT
+  State: IMPLEMENTING (60%)
+  Roles: Security Engineer, QA Engineer
+
+[Then answer user's question...]
+```
+
+### Step 3: Apply Context Throughout
+
+- Reference task goal in responses
+- Follow role checklists (Security, QA, etc.)
+- Respect current workflow state
+- Address warnings if any exist
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚨 BEFORE ANY WORK (MANDATORY)
+
+⚠️  **CRITICAL:** Check task scope BEFORE doing ANY coding work!
+
+### Active Task Scope Check
+
+**Before writing code, changing files, or implementing features:**
+
+1. **Check Active Task**
+   ```bash
+   npx ai-workflow task status
+   ```
+
+2. **Verify Work Scope**
+   - Does user request match active task goal?
+   - Is this work within current task scope?
+   - Or is this NEW work requiring NEW task?
+
+3. **Decision Matrix**
+
+   **✅ CONTINUE with active task IF:**
+   - Work directly fulfills current task goal
+   - Logical extension of current task
+   - Same feature/bug/requirement
+
+   **❌ CREATE NEW TASK IF:**
+   - User requests different feature
+   - User requests different bug fix
+   - Scope significantly different
+   - Previous task completed
+
+4. **Action Required**
+
+   **If NEW task needed:**
+   ```bash
+   # Check if current task is done
+   $ npx ai-workflow task status
+   
+   # If completed or different scope:
+   $ npx ai-workflow task create "<new work description>"
+   
+   # Verify new task created
+   $ npx ai-workflow task status
+   ```
+
+   **Then proceed with work.**
+
+### Examples
+
+**❌ BAD - Violates Workflow:**
+```
+Active task: "Fix authentication bug"
+User: "Add dark mode to UI"
+AI: [Starts adding dark mode] ← WRONG! Different scope!
+```
+
+**✅ GOOD - Creates New Task:**
+```
+Active task: "Fix authentication bug"  
+User: "Add dark mode to UI"
+AI: This is new work! Let me create a new task first:
+    $ npx ai-workflow task create "Add dark mode to UI"
+    ✅ Task created!
+    [Now starts adding dark mode]
+```
+
+**✅ GOOD - Same Scope:**
+```
+Active task: "Implement user authentication with JWT"
+User: "Also add password hashing"
+AI: Password hashing is part of authentication! Continuing with current task.
+    [Adds password hashing]
+```
+
+### Why This Matters
+
+**Workflow Violations Prevented:**
+- ❌ Work done outside task scope
+- ❌ Commits tagged with wrong task
+- ❌ Traceability broken
+- ❌ Compliance reports incorrect
+
+**Proper Workflow Maintained:**
+- ✅ All work tracked correctly
+- ✅ Commits properly tagged
+- ✅ Full traceability
+- ✅ Accurate compliance reports
+
+### Enforcement Level
+
+**MANDATORY** - This is NOT optional!
+
+- Must check active task before ANY coding work
+- Must create new task if scope doesn't match
+- Must verify task created before proceeding
+- Violation = Compliance failure
+
+**Exception:** Pure questions, information requests, or status checks (no code changes).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 WHY THIS RULE EXISTS
+
+**Without reading these files:**
+- ❌ You forget context between sessions
+- ❌ You repeat questions user already answered
+- ❌ You make inconsistent decisions
+- ❌ You introduce bugs
+
+**With reading these files:**
+- ✅ You maintain context across sessions
+- ✅ You remember established patterns
+- ✅ You make consistent decisions
+- ✅ You produce quality code
+
+**These files ARE your long-term memory.**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**This rule has `alwaysApply: true` - You MUST follow in EVERY conversation**

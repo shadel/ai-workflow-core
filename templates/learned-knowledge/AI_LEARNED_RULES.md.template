@@ -1,0 +1,105 @@
+# AI Learned Rules (From User Feedback)
+
+**Purpose**: Persistent memory of user corrections and preferences  
+**Usage**: AI MUST read this file at start of EVERY workflow  
+**Update**: Add new rules whenever user provides corrections  
+**Priority**: CRITICAL rules cannot be violated
+
+---
+
+## 🔴 Critical Rules (NEVER Violate)
+
+### RULE-001: [Your First Critical Rule]
+
+**Learned From**: [Session/Date when you learned this]  
+**User Quote**: "[Exact user feedback that triggered this rule]"
+
+**The Rule**:
+[Clear statement of what AI MUST or MUST NOT do]
+
+**Why This Rule Exists**:
+- [Problem it solves]
+- [Pain point it addresses]
+- [Impact if violated]
+
+**Actions Required**:
+1. ✅ [Specific action step 1]
+2. ✅ [Specific action step 2]
+3. ✅ [Specific action step 3]
+
+**Examples**:
+
+**Good Example** ✅:
+```
+[Show correct behavior]
+```
+
+**Bad Example** ❌:
+```
+[Show incorrect behavior to avoid]
+```
+
+**Enforcement**:
+- [How this rule is validated]
+- [What prevents violations]
+- [Consequences of violation]
+
+**Related**: [Links to other rules or documentation]
+
+---
+
+## 🟡 High Priority Rules
+
+### RULE-002: [Your Second Rule]
+
+[Follow same structure as above]
+
+---
+
+## 📚 How to Use This File
+
+### **For AI Agents** (MANDATORY):
+
+**At Start of EVERY Task**:
+```
+1. Read docs/learned-knowledge/AI_LEARNED_RULES.md (this file)
+2. Read docs/learned-knowledge/USER_PREFERENCES.md
+3. Identify relevant rules for current task
+4. Show user: "Applying learned rules: X, Y, Z"
+5. Execute with rules in mind
+6. After completion: Check if new rules learned
+7. Update files if user provided corrections
+```
+
+**During Execution**:
+```
+Before critical decisions:
+  → Check: "Any learned rule about this?"
+  → Apply: Rule if found
+  → Proceed: With rule in mind
+```
+
+**After User Correction**:
+```
+1. Acknowledge correction
+2. Extract rule from feedback
+3. Add to this file
+4. Create memory (long-term storage)
+5. Show user: "Learned: [rule summary]"
+```
+
+---
+
+## 📈 Rule Effectiveness Tracking
+
+| Rule ID | Times Applied | Violations Prevented | Last Applied |
+|---------|---------------|---------------------|--------------|
+| RULE-001 | 0 | 0 | N/A |
+
+**Update this table** when rules are applied or violated.
+
+---
+
+**This file is the AI's LONG-TERM MEMORY.** 🧠  
+**Read it. Apply it. Update it. Learn from it.**
+

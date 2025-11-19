@@ -1,0 +1,370 @@
+{
+  "version": "1.5.0",
+  "description": "Central registry mapping features to required rules for AI-first usage",
+  "features": {
+    "task": {
+      "name": "Task Management",
+      "commands": ["create", "status", "update", "complete", "clear"],
+      "requiredRules": [
+        {
+          "id": "RULE-001",
+          "name": "Auto-trigger AI Workflow Engine",
+          "priority": "CRITICAL",
+          "category": "automation",
+          "description": "Automatically trigger workflow for all coding requests",
+          "triggerOn": [
+            "feature requests",
+            "bug fixes",
+            "refactoring",
+            "debugging",
+            "troubleshooting",
+            "performance optimization"
+          ],
+          "dontTriggerOn": [
+            "pure questions",
+            "information requests",
+            "status checks"
+          ],
+          "template": "docs/rule-templates/RULE-001-template.md",
+          "estimatedUsageIncrease": "0% → 90%"
+        }
+      ],
+      "optional": false
+    },
+    
+    "requirements": {
+      "name": "Requirements Tracking",
+      "commands": ["init", "create", "list", "update", "status", "report"],
+      "requiredRules": [
+        {
+          "id": "RULE-008",
+          "name": "Requirements & Traceability Integration",
+          "priority": "CRITICAL",
+          "category": "workflow-integration",
+          "description": "Integrate requirements into all workflow phases automatically",
+          "phases": {
+            "UNDERSTAND": {
+              "actions": [
+                "List existing requirements",
+                "Create requirement for new features",
+                "Check current traceability coverage"
+              ],
+              "commands": [
+                "npx ai-workflow requirement list",
+                "npx ai-workflow requirement create \"<name>\" --type FR --priority P0",
+                "npx ai-workflow trace show"
+              ]
+            },
+            "IMPLEMENT": {
+              "actions": [
+                "Add @requirement FR-XXX comments to all files",
+                "Update requirement status to in_progress"
+              ],
+              "commands": [
+                "npx ai-workflow requirement update FR-XXX --status in_progress"
+              ]
+            },
+            "REVIEW": {
+              "actions": [
+                "Generate traceability matrix",
+                "Check coverage (target: >= 80%)",
+                "Find and fix gaps"
+              ],
+              "commands": [
+                "npx ai-workflow trace generate",
+                "npx ai-workflow trace show",
+                "npx ai-workflow trace gaps"
+              ]
+            },
+            "COMMIT": {
+              "actions": [
+                "Mark requirements as done",
+                "Export traceability report",
+                "Verify coverage >= 80%"
+              ],
+              "commands": [
+                "npx ai-workflow requirement update FR-XXX --status done",
+                "npx ai-workflow trace export --output docs/workflows/traceability-report.md"
+              ],
+              "qualityGates": [
+                {
+                  "name": "coverage",
+                  "threshold": 80,
+                  "severity": "ERROR"
+                }
+              ]
+            }
+          },
+          "template": "docs/rule-templates/RULE-008-template.md",
+          "estimatedUsageIncrease": "0% → 95%"
+        }
+      ],
+      "optional": false
+    },
+    
+    "traceability": {
+      "name": "Traceability Matrix",
+      "commands": ["generate", "show", "gaps", "export"],
+      "requiredRules": [
+        {
+          "id": "RULE-008",
+          "name": "Requirements & Traceability Integration",
+          "note": "Same rule as requirements (integrated feature)",
+          "sharedWith": "requirements"
+        }
+      ],
+      "optional": false
+    },
+    
+    "code-org": {
+      "name": "Code Organization Validation",
+      "commands": ["validate", "check-structure", "check-naming", "stats"],
+      "requiredRules": [
+        {
+          "id": "RULE-009",
+          "name": "Code Organization Validation",
+          "priority": "HIGH",
+          "category": "quality-assurance",
+          "description": "Validate code organization in IMPLEMENT and REVIEW phases",
+          "phases": {
+            "IMPLEMENT": {
+              "actions": [
+                "After creating directories: validate structure",
+                "After creating files: validate naming conventions"
+              ],
+              "commands": [
+                "npx ai-workflow code-org check-structure",
+                "npx ai-workflow code-org check-naming"
+              ]
+            },
+            "REVIEW": {
+              "actions": [
+                "Full validation before commit",
+                "Check statistics and quality gates"
+              ],
+              "commands": [
+                "npx ai-workflow code-org validate",
+                "npx ai-workflow code-org stats"
+              ]
+            }
+          },
+          "qualityGates": [
+            {
+              "name": "structure",
+              "description": "Required directories exist",
+              "severity": "ERROR"
+            },
+            {
+              "name": "naming",
+              "description": "Naming conventions followed",
+              "severity": "WARNING"
+            },
+            {
+              "name": "file-size",
+              "threshold": 500,
+              "severity": "WARNING"
+            }
+          ],
+          "template": "docs/rule-templates/RULE-009-template.md",
+          "estimatedUsageIncrease": "0% → 100%"
+        }
+      ],
+      "optional": false
+    },
+    
+    "testing": {
+      "name": "Testing Strategy",
+      "commands": [],
+      "note": "No tool commands, but rules still required",
+      "requiredRules": [
+        {
+          "id": "RULE-010",
+          "name": "Comprehensive Testing Strategy",
+          "priority": "CRITICAL",
+          "category": "quality-assurance",
+          "description": "Write tests at 3 levels following test pyramid (70-20-10)",
+          "phases": {
+            "TEST": {
+              "actions": [
+                "Create test plan",
+                "Write unit tests (70% coverage)",
+                "Write integration tests (20% coverage)",
+                "Write E2E tests (10% coverage)",
+                "Execute all P0/P1 tests",
+                "Document test results"
+              ],
+              "testPyramid": {
+                "unit": 70,
+                "integration": 20,
+                "e2e": 10
+              }
+            },
+            "REVIEW": {
+              "actions": [
+                "Verify test coverage >= 60%",
+                "Cannot proceed if tests missing"
+              ],
+              "qualityGates": [
+                {
+                  "name": "coverage",
+                  "threshold": 60,
+                  "severity": "ERROR"
+                }
+              ]
+            }
+          },
+          "minCoverage": 60,
+          "template": "docs/rule-templates/RULE-010-template.md",
+          "estimatedUsageIncrease": "0% → 90%"
+        },
+        {
+          "id": "RULE-011",
+          "name": "MCP Browser Testing for UI",
+          "priority": "HIGH",
+          "category": "test-automation",
+          "description": "Use MCP browser tools for automated E2E testing",
+          "applicableWhen": "UI/UX changes",
+          "tools": [
+            "browser_navigate",
+            "browser_snapshot",
+            "browser_click",
+            "browser_type",
+            "browser_take_screenshot",
+            "browser_resize"
+          ],
+          "process": [
+            "Navigate to page",
+            "Verify structure (snapshot)",
+            "Test interactions",
+            "Take screenshots (evidence)",
+            "Test mobile (resize)",
+            "Document results"
+          ],
+          "template": "docs/rule-templates/RULE-011-template.md",
+          "estimatedUsageIncrease": "0% → 95%"
+        }
+      ],
+      "optional": false
+    },
+    
+    "workflow": {
+      "name": "Workflow State Machine",
+      "commands": ["validate"],
+      "requiredRules": [
+        {
+          "id": "RULE-012",
+          "name": "Workflow Step Actions Enforcement",
+          "priority": "CRITICAL",
+          "category": "workflow-enforcement",
+          "description": "Each step has mandatory actions that cannot be skipped",
+          "consolidates": ["RULE-008", "RULE-009", "RULE-010", "RULE-011"],
+          "workflowChecklist": {
+            "UNDERSTAND": ["Requirements list", "create if new", "check coverage"],
+            "DESIGN": ["Document solution", "requirements", "test strategy"],
+            "IMPLEMENT": ["Add @requirement comments", "validate code-org"],
+            "TEST": ["Write unit (70%)", "integration (20%)", "E2E (10% MCP)"],
+            "REVIEW": ["Validate code-org", "generate traceability", "check gaps"],
+            "COMMIT": ["Run validate", "export traceability", "verify coverage"]
+          },
+          "template": "docs/rule-templates/RULE-012-template.md",
+          "estimatedUsageIncrease": "22% → 89%"
+        }
+      ],
+      "optional": false
+    },
+    
+    "git-integration": {
+      "name": "Git Hooks and Commits",
+      "commands": ["init"],
+      "requiredRules": [
+        {
+          "id": "RULE-002",
+          "name": "File Output Validation",
+          "priority": "HIGH",
+          "category": "file-organization",
+          "description": "Always use full paths for file exports, verify location",
+          "actions": [
+            "Use full path when redirecting output",
+            "Verify file location after creation",
+            "Move immediately if misplaced",
+            "Check root is clean before commit"
+          ],
+          "template": "docs/rule-templates/RULE-002-template.md"
+        },
+        {
+          "id": "RULE-007",
+          "name": "Safe Commit Message Format",
+          "priority": "CRITICAL",
+          "category": "workflow-reliability",
+          "description": "Use safe commit message format to prevent workflow hangs",
+          "format": {
+            "template": "git commit -m \"type: subject\" -m \"detail 1\" -m \"detail 2\"",
+            "dos": [
+              "Use multiple -m flags",
+              "Keep subject 50-72 chars",
+              "Use simple language",
+              "Spell out symbols (percent not %)",
+              "Total < 500 characters"
+            ],
+            "donts": [
+              "Newlines in single -m flag",
+              "Emojis",
+              "Bash keywords in UPPERCASE",
+              "Special characters",
+              "Very long messages (> 500 chars)"
+            ]
+          },
+          "template": "docs/rule-templates/RULE-007-template.md"
+        }
+      ],
+      "optional": false
+    }
+  },
+  
+  "ruleCategories": {
+    "workflow-integration": {
+      "description": "Rules for integrating features into workflow phases",
+      "rules": ["RULE-008"],
+      "priority": "CRITICAL"
+    },
+    "quality-assurance": {
+      "description": "Rules for maintaining code quality",
+      "rules": ["RULE-009", "RULE-010"],
+      "priority": "CRITICAL"
+    },
+    "test-automation": {
+      "description": "Rules for automated testing",
+      "rules": ["RULE-011"],
+      "priority": "HIGH"
+    },
+    "workflow-enforcement": {
+      "description": "Rules for enforcing workflow steps",
+      "rules": ["RULE-012"],
+      "priority": "CRITICAL"
+    },
+    "automation": {
+      "description": "Rules for automatic workflow triggering",
+      "rules": ["RULE-001"],
+      "priority": "CRITICAL"
+    },
+    "file-organization": {
+      "description": "Rules for file and documentation organization",
+      "rules": ["RULE-002"],
+      "priority": "HIGH"
+    },
+    "workflow-reliability": {
+      "description": "Rules for preventing workflow failures",
+      "rules": ["RULE-007"],
+      "priority": "CRITICAL"
+    }
+  },
+  
+  "statistics": {
+    "totalFeatures": 7,
+    "totalRules": 9,
+    "criticalRules": 6,
+    "highRules": 3,
+    "averageRulesPerFeature": 1.3
+  }
+}
+

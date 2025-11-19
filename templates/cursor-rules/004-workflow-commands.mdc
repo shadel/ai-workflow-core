@@ -1,0 +1,556 @@
+# AI Workflow Commands - Cursor Quick Reference
+
+**Priority:** 4 (After state enforcement, memory, validation)  
+**Purpose:** Help Cursor discover and use ai-workflow commands  
+**Updated:** {{DATE}}
+
+---
+
+## 🎯 Purpose
+
+This file helps you (Cursor AI) understand what ai-workflow commands are available and when to use them.
+
+**IMPORTANT:** User has ai-workflow installed. You CAN and SHOULD use these commands when appropriate.
+
+---
+
+## 🗺️ Natural Language → Commands
+
+**When user says these things, run these commands:**
+
+| User Says | You Run | Example |
+|-----------|---------|---------|
+| "Create task for X" | `task create` | `npx ai-workflow task create "Add login feature"` |
+| "Start task: X" | `task create` | `npx ai-workflow task create "Fix bug in auth"` |
+| "What's my current task?" | `task status` or read STATUS.txt | `npx ai-workflow task status` |
+| "Check status" | `task status` | `npx ai-workflow task status` |
+| "I'm done" / "Task complete" | `task complete` | `npx ai-workflow task complete` |
+| "Mark this complete" | `task complete` | `npx ai-workflow task complete` |
+| "Update progress" | `sync` | `npx ai-workflow sync` |
+| "Move to testing" | `sync --state` | `npx ai-workflow sync --state TESTING` |
+| "Sync workflow" | `sync` | `npx ai-workflow sync` |
+| "Ready to commit?" | `validate` | `npx ai-workflow validate` |
+| "Validate my work" | `validate` | `npx ai-workflow validate` |
+| "Check if I can commit" | `validate` | `npx ai-workflow validate` |
+| "Remember this rule" | `pattern add` | `npx ai-workflow pattern add "..." -c "..."` |
+| "Save this as pattern" | `pattern add` | `npx ai-workflow pattern add "..." -c "..."` |
+| "Show patterns" | `pattern list` | `npx ai-workflow pattern list` |
+| "What patterns do we have?" | `pattern list` | `npx ai-workflow pattern list` |
+
+---
+
+## 📚 Command Categories
+
+### 1. Task Management
+
+```bash
+# Create new task
+npx ai-workflow task create "<goal>"
+
+# Check current task
+npx ai-workflow task status
+
+# Mark task complete
+npx ai-workflow task complete
+```
+
+**When to use:**
+- User starts new work → Create task
+- User asks about progress → Show status
+- User finishes work → Complete task
+
+---
+
+### 2. Workflow State
+
+```bash
+# Auto-sync state
+npx ai-workflow sync
+
+# Set specific state
+npx ai-workflow sync --state <STATE>
+
+# Validate before commit
+npx ai-workflow validate
+```
+
+**Available States:**
+1. UNDERSTANDING - Ask questions, gather requirements
+2. DESIGNING - Plan architecture
+3. IMPLEMENTING - Write code
+4. TESTING - Write tests
+5. REVIEWING - Review quality
+6. READY_TO_COMMIT - Validated, ready to commit
+
+**When to use:**
+- Moving between phases → Sync state
+- Before ANY commit → Validate (mandatory!)
+
+---
+
+### 3. Pattern Management
+
+```bash
+# Add new pattern
+npx ai-workflow pattern add "<title>" -c "<content>"
+
+# List patterns
+npx ai-workflow pattern list
+
+# Search patterns
+npx ai-workflow pattern search <query>
+```
+
+**When to use:**
+- User establishes convention → Save pattern
+- User corrects repeatedly → Save pattern
+- User asks about patterns → List patterns
+
+---
+
+## 🔄 Common Workflows
+
+### Starting Work
+
+```
+User: "Add dark mode feature"
+
+You:
+1. Create task:
+   $ npx ai-workflow task create "Add dark mode toggle"
+   
+2. Confirm:
+   "✅ Task created! 
+    ID: task-1234567890
+    State: UNDERSTANDING
+    
+    Let me understand requirements:
+    - Toggle in settings or header?
+    - Save preference to localStorage?
+    - Apply to all pages?"
+```
+
+### Checking Progress
+
+```
+User: "What am I working on?"
+
+You:
+1. Check status:
+   $ npx ai-workflow task status
+   
+   OR read: .ai-context/STATUS.txt
+   
+2. Respond:
+   "You're working on: Add dark mode toggle
+    Current state: IMPLEMENTING
+    Started: 2 hours ago
+    
+    Next: Complete implementation, then move to TESTING"
+```
+
+### Before Commit
+
+```
+User: "Ready to commit?"
+
+You:
+1. Validate first (MANDATORY!):
+   $ npx ai-workflow validate
+   
+2a. If passes:
+    "✅ Validation passed! Safe to commit.
+     
+     Suggested commit:
+     git commit -m 'feat: add dark mode toggle'
+     
+     After commit:
+     $ npx ai-workflow task complete"
+
+2b. If fails:
+    "❌ Validation failed:
+     [Show specific issues]
+     
+     Let me help fix these first."
+```
+
+### Completing Work
+
+```
+User: "I'm done with this"
+
+You:
+1. Complete task:
+   $ npx ai-workflow task complete
+   
+2. Confirm:
+   "✅ Task completed!
+    
+    Great work! Ready for next task?
+    
+    To start new work:
+    $ npx ai-workflow task create '<next goal>'"
+```
+
+### Saving Pattern
+
+```
+User: "Always use async/await, never .then()"
+
+You:
+1. Save pattern:
+   $ npx ai-workflow pattern add "Use async/await" \
+     -c "Always use async/await, never use .then() chains" \
+     --score 5
+   
+2. Confirm:
+   "✅ Pattern saved! I'll remember to always use async/await.
+    Pattern ID: PATTERN-1234567890"
+```
+
+---
+
+## ✅ When to Suggest Commands
+
+**DO suggest commands when:**
+- ✅ User starts new work (suggest: `task create`)
+- ✅ User finishes work (suggest: `task complete`)
+- ✅ Before committing (suggest: `validate`)
+- ✅ User establishes rule (suggest: `pattern add`)
+- ✅ User asks about task (suggest: `task status` or read STATUS.txt)
+- ✅ Moving between phases (suggest: `sync --state`)
+
+**DON'T spam:**
+- ❌ Not every message needs a command
+- ❌ Read context files first (STATUS.txt, NEXT_STEPS.md)
+- ❌ User can run commands manually too
+- ❌ Commands are helpers, not requirements
+
+---
+
+## 🚨 Critical Rules
+
+### NEVER Commit Without Validation
+
+```
+❌ BAD:
+User: "Ready to commit?"
+You: "Yes! git commit -m '...'"
+
+✅ GOOD:
+User: "Ready to commit?"
+You: "Let me validate first:
+     $ npx ai-workflow validate
+     
+     [Check result, then advise]"
+```
+
+### NEVER Skip States
+
+```
+❌ BAD:
+$ npx ai-workflow sync --state READY_TO_COMMIT
+(Skipping TESTING, REVIEWING)
+
+✅ GOOD:
+$ npx ai-workflow sync --state TESTING
+[Write tests]
+$ npx ai-workflow sync --state REVIEWING
+[Review quality]
+$ npx ai-workflow validate
+```
+
+### ALWAYS Read Context First
+
+```
+✅ At EVERY conversation start:
+1. Read: .ai-context/STATUS.txt (current task)
+2. Read: .ai-context/NEXT_STEPS.md (what to do)
+3. Read: .ai-context/patterns.json (patterns to follow)
+4. Then respond appropriately
+```
+
+### ALWAYS Follow Patterns
+
+```
+If .ai-context/patterns.json contains:
+{
+  "title": "Use async/await",
+  "content": "Always use async/await..."
+}
+
+You MUST use async/await without user reminding you.
+```
+
+---
+
+## 📖 Context Files Integration
+
+### Files to Read Every Conversation
+
+**Priority 1: STATUS.txt**
+```
+Read: .ai-context/STATUS.txt
+
+Contains:
+- Current task goal
+- Current workflow state
+- Time elapsed
+- Suggested next commands
+```
+
+**Priority 2: NEXT_STEPS.md**
+```
+Read: .ai-context/NEXT_STEPS.md
+
+Contains:
+- What to do next
+- Active role checklists
+- State-specific guidance
+```
+
+**Priority 3: patterns.json**
+```
+Read: .ai-context/patterns.json
+
+Contains:
+- Project conventions
+- Best practices
+- Style preferences
+- Rules to follow
+```
+
+**Priority 4: COMMANDS.md (This File)**
+```
+Reference: .ai-context/COMMANDS.md
+
+Contains:
+- Full command documentation
+- Detailed examples
+- Troubleshooting guide
+```
+
+---
+
+## 🎯 State-Based Behavior
+
+**Current state determines what to do:**
+
+### At UNDERSTANDING
+
+```
+You should:
+- Ask clarifying questions
+- Gather requirements
+- Read existing code
+- Understand constraints
+
+Commands available:
+- Read STATUS.txt for current task
+- Suggest: sync --state DESIGNING (when ready)
+```
+
+### At DESIGNING
+
+```
+You should:
+- Plan architecture
+- Design interfaces
+- Choose technologies
+- Document decisions
+
+Commands available:
+- Suggest: sync --state IMPLEMENTING (when design ready)
+```
+
+### At IMPLEMENTING
+
+```
+You should:
+- Write production code
+- Follow patterns (.ai-context/patterns.json)
+- Implement features
+- Build functionality
+
+Commands available:
+- Suggest: sync --state TESTING (when code done)
+```
+
+### At TESTING
+
+```
+You should:
+- Write unit tests
+- Write integration tests
+- Test edge cases
+- Ensure coverage >70%
+
+Commands available:
+- Suggest: sync --state REVIEWING (when tests pass)
+```
+
+### At REVIEWING
+
+```
+You should:
+- Review code quality
+- Check requirements satisfied
+- Look for improvements
+- Verify patterns followed
+
+Commands available:
+- Suggest: validate (to check if ready)
+```
+
+### At READY_TO_COMMIT
+
+```
+You should:
+- Suggest commit with good message
+- Include task reference
+- Remind to complete task after
+
+Commands available:
+- git commit (safe now!)
+- task complete (after commit)
+```
+
+---
+
+## 💡 Pro Tips
+
+### Running Commands
+
+```
+User doesn't need to switch to terminal!
+
+User: "Create task for login"
+You: *Run command*
+$ npx ai-workflow task create "Add login feature"
+*Show output*
+
+User stays in flow, you handle the command.
+```
+
+### Reading vs Running
+
+```
+For task status, you can either:
+
+Option 1 (Faster):
+Read: .ai-context/STATUS.txt
+
+Option 2 (More detailed):
+Run: npx ai-workflow task status
+
+Choose based on what user needs.
+```
+
+### Pattern Detection
+
+```
+If user corrects you 2+ times for same thing:
+
+You: "I notice you've corrected this twice.
+     Should I save this as a pattern?
+     
+     Suggested pattern:
+     Title: [auto-generated]
+     Rule: [extracted from corrections]
+     
+     Save? [Y/n]"
+
+User: "Y"
+
+You: $ npx ai-workflow pattern add "..." -c "..."
+```
+
+---
+
+## 🆘 Troubleshooting
+
+### No Active Task Error
+
+```
+Error: No active task
+
+Fix:
+$ npx ai-workflow task create "<goal>"
+```
+
+### Invalid State Transition
+
+```
+Error: Can't go from UNDERSTANDING → TESTING
+
+Fix: Progress sequentially
+$ npx ai-workflow sync --state DESIGNING
+$ npx ai-workflow sync --state IMPLEMENTING
+$ npx ai-workflow sync --state TESTING
+```
+
+### Validation Failed
+
+```
+Error: Validation failed
+
+Fix:
+1. Read error message
+2. Fix issues
+3. Validate again
+4. Commit only after passing
+```
+
+---
+
+## 📚 More Resources
+
+**Detailed documentation:**
+- Full reference: `.ai-context/COMMANDS.md`
+- Package README: `node_modules/@shadel/ai-workflow-core/README.md`
+- GitHub: https://github.com/shadel/ai-workflow-engine
+
+**Other Cursor rules:**
+- State enforcement: `.cursor/rules/000-current-state-enforcement.mdc`
+- Memory system: `.cursor/rules/001-workflow-core.mdc`
+- State behavior: `.cursor/rules/002-workflow-states.mdc`
+- Validation: `.cursor/rules/003-workflow-validation.mdc`
+- Commands: `.cursor/rules/004-workflow-commands.mdc` (this file)
+
+---
+
+## 🎯 Quick Reference Card
+
+```
+╔════════════════════════════════════════════════════╗
+║ AI-WORKFLOW COMMANDS CHEAT SHEET                   ║
+╠════════════════════════════════════════════════════╣
+║ START WORK                                         ║
+║ $ npx ai-workflow task create "<goal>"            ║
+║                                                    ║
+║ CHECK STATUS                                       ║
+║ $ npx ai-workflow task status                     ║
+║ $ cat .ai-context/STATUS.txt                      ║
+║                                                    ║
+║ UPDATE STATE                                       ║
+║ $ npx ai-workflow sync --state <STATE>            ║
+║                                                    ║
+║ BEFORE COMMIT                                      ║
+║ $ npx ai-workflow validate                        ║
+║                                                    ║
+║ AFTER COMMIT                                       ║
+║ $ npx ai-workflow task complete                   ║
+║                                                    ║
+║ SAVE PATTERN                                       ║
+║ $ npx ai-workflow pattern add "..." -c "..."     ║
+╚════════════════════════════════════════════════════╝
+```
+
+---
+
+**Remember:** These commands help you guide the user through a quality workflow. Use them appropriately, not excessively.
+
+**Priority:** 4  
+**Status:** Active  
+**Version:** 3.1.1  
+**Updated:** {{DATE}}

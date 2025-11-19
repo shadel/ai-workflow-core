@@ -1,0 +1,364 @@
+---
+description: "WORKFLOW STATE ENFORCEMENT - Hybrid Guide (Quick Ref + Detailed State Files)"
+globs: "**/*"
+alwaysApply: true
+priority: 0
+version: 2.1.0-hybrid
+tags: [state-enforcement, hybrid, critical, all-states]
+lastUpdated: 2025-11-12
+---
+
+# 🚨 WORKFLOW STATE ENFORCEMENT - HYBRID GUIDE
+
+⚠️  **This file is STATIC - contains instructions and quick reference**  
+⚠️  **Full state details: Read state-behaviors/{STATE}.md when needed**  
+⚠️  **Read this ONCE at conversation start, then lookup current state**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📋 INSTRUCTIONS FOR AI (READ THIS FIRST!)
+
+### How to Use This File:
+
+**Step 1:** Read `.ai-context/STATUS.txt` to identify current workflow state
+
+**Step 2:** Find matching state in Quick Lookup Table below
+
+**Step 3:** Read full state rules from `.cursor/rules/state-behaviors/{STATE}.md`
+```
+Example:
+STATUS.txt shows "State: TESTING_COMPLETE"
+→ Read: .cursor/rules/state-behaviors/TESTING_COMPLETE.md
+→ Follow all rules from that file
+```
+
+**Step 4:** Apply universal rules (see "Critical Reminders" section below)
+
+**Step 5:** Use progression protocol from state file when ready to advance
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔍 QUICK STATE LOOKUP TABLE
+
+**Use this for quick reference, then read full state file for details:**
+
+| # | State Name | Purpose | Can Code? | Can Test? | Can Commit? | Read File |
+|---|-----|---|-----|-----|----|-----|
+| 1 | **UNDERSTANDING** | Understand requirements | ❌ | ❌ | ❌ | state-behaviors/UNDERSTANDING.md |
+| 2 | **DESIGNING** | Design solution | ❌ | ❌ | ❌ | state-behaviors/DESIGNING.md |
+| 3 | **IMPLEMENTING** | Write production code | ✅ | ❌ | ❌ | state-behaviors/IMPLEMENTING.md |
+| 4 | **TESTING** | Write comprehensive tests | ✅ | ✅ | ❌ | state-behaviors/TESTING.md |
+| 5 | **REVIEWING** | Review code quality | ✅ | ✅ | ❌ | state-behaviors/REVIEWING.md |
+| 6 | **READY_TO_COMMIT** | Commit validated work | ✅ | ✅ | ✅ | state-behaviors/READY_TO_COMMIT.md |
+
+**→ After identifying your state, READ the corresponding state-behaviors/*.md file!**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚫 CRITICAL UNIVERSAL RULES (APPLY TO ALL STATES)
+
+### 1. NEVER Code at Planning States
+
+**UNDERSTANDING & DESIGN_COMPLETE are for PLANNING ONLY:**
+- ❌ NEVER write production code
+- ❌ NEVER modify existing code files
+- ❌ NEVER create components/modules
+- ❌ NEVER refactor code
+
+**Why:** Code without proper understanding = bugs and rework
+
+**When you CAN code:** IMPLEMENTATION_COMPLETE state and after
+
+---
+
+### 2. NEVER Skip Tests (MANDATORY!)
+
+**Tests are REQUIRED before ANY commit:**
+- ❌ NEVER suggest commits without tests
+- ❌ NEVER say "tests can be added later"
+- ❌ NEVER claim work is "done" without tests
+
+**Required:** TESTING_COMPLETE state with passing tests
+
+**Why:** Untested code = production bugs
+
+---
+
+### 3. NEVER Commit Without Validation
+
+**Commits ONLY allowed at COMMIT_READY state:**
+- ❌ NEVER commit from any other state
+- ❌ NEVER use --no-verify flag
+- ❌ NEVER bypass pre-commit hooks
+
+**Required sequence:**
+```
+REVIEW_COMPLETE → Run validation → Pass → COMMIT_READY → Commit
+```
+
+**Why:** Quality gates prevent broken code from being committed
+
+---
+
+### 4. ALWAYS Check STATUS.txt First
+
+**At conversation start and before major actions:**
+```bash
+Read: .ai-context/STATUS.txt
+Check: Current state
+Then: Apply that state's behavior rules
+```
+
+**Why:** Your allowed actions depend on current state
+
+---
+
+### 5. ALWAYS Progress Sequentially
+
+**State progression is LINEAR - cannot skip:**
+```
+UNDERSTANDING
+  ↓ Requirements clear
+DESIGN_COMPLETE
+  ↓ Design approved
+IMPLEMENTATION_COMPLETE
+  ↓ Code written
+TESTING_COMPLETE
+  ↓ Tests passing
+REVIEW_COMPLETE
+  ↓ Validation passed
+COMMIT_READY
+  ↓ Committed
+DONE
+```
+
+**Cannot skip states!** Each has specific completion criteria.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📖 STATE PROGRESSION FLOW
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ START → Check STATUS.txt                                     │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 1: UNDERSTANDING                                       │
+│ ✅ DO: Ask questions, read code, analyze                    │
+│ ❌ DON'T: Code, test, commit                                │
+│ → Next: Get user approval → sync --state DESIGN_COMPLETE    │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 2: DESIGN_COMPLETE                                     │
+│ ✅ DO: Design architecture, plan implementation             │
+│ ❌ DON'T: Write code, test, commit                          │
+│ → Next: Get approval → sync --state IMPLEMENTATION_COMPLETE │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 3: IMPLEMENTATION_COMPLETE                             │
+│ ✅ DO: Write production code, implement features            │
+│ ❌ DON'T: Write tests yet, commit                           │
+│ → Next: Code done → sync --state TESTING_COMPLETE           │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 4: TESTING_COMPLETE                                    │
+│ ✅ DO: Write tests, verify coverage, run tests              │
+│ ❌ DON'T: Add new features, commit                          │
+│ → Next: Tests pass → sync --state REVIEW_COMPLETE           │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 5: REVIEW_COMPLETE                                     │
+│ ✅ DO: Review quality, check requirements                   │
+│ ❌ DON'T: Major changes, commit                             │
+│ → Next: Run validation → Passes → Auto COMMIT_READY         │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ STATE 6: COMMIT_READY                                        │
+│ ✅ DO: Stage files, commit with message, complete task      │
+│ ❌ DON'T: Use --no-verify, bypass hooks                     │
+│ → Next: Commit → Complete task → DONE                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚫 COMMON VIOLATIONS TO AVOID
+
+### ❌ Violation 1: Coding Too Early
+```
+User: "Add authentication feature"
+AI at UNDERSTANDING: [Starts writing code] ← WRONG!
+
+✅ Correct:
+AI at UNDERSTANDING: "Let me understand requirements first:
+  1. What authentication method? (JWT, OAuth, etc.)
+  2. Where should users login?
+  3. ..."
+```
+
+### ❌ Violation 2: Skipping Tests
+```
+AI at IMPLEMENTATION_COMPLETE: "Code done! Ready to commit!" ← WRONG!
+
+✅ Correct:
+AI at IMPLEMENTATION_COMPLETE: "Code done. May I progress to TESTING_COMPLETE 
+to write tests?"
+```
+
+### ❌ Violation 3: Committing Without Validation
+```
+AI at REVIEW_COMPLETE: "git commit -m '...'" ← WRONG!
+
+✅ Correct:
+AI at REVIEW_COMPLETE: "Let me run validation first:
+  npx ai-workflow validate"
+```
+
+### ❌ Violation 4: Skipping States
+```
+AI jumps: UNDERSTANDING → IMPLEMENTATION_COMPLETE ← WRONG! (Skipped DESIGN)
+
+✅ Correct:
+UNDERSTANDING → DESIGN_COMPLETE → IMPLEMENTATION_COMPLETE
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📚 EXAMPLE: CORRECT WORKFLOW
+
+**User Request:** "Add user authentication"
+
+### ✅ Step 1: UNDERSTANDING State
+```
+AI: ✓ State: UNDERSTANDING
+    Let me understand requirements:
+    1. What authentication method?
+    2. Session storage approach?
+    3. Security requirements?
+    [Asks 10+ questions...]
+    
+    Summary: [After user answers]
+    May I progress to DESIGN_COMPLETE?
+    
+User: Yes
+
+AI: [Runs: npx ai-workflow sync --state DESIGN_COMPLETE]
+```
+
+### ✅ Step 2: DESIGN_COMPLETE State
+```
+AI: ✓ State: DESIGN_COMPLETE
+    Design proposal:
+    - AuthContext (React Context)
+    - JWT tokens in httpOnly cookies
+    - Login/Register components
+    - Protected routes
+    
+    Files to create:
+    - src/contexts/AuthContext.tsx
+    - src/components/Login.tsx
+    
+    Design approved?
+    
+User: Yes
+
+AI: [Runs: npx ai-workflow sync --state IMPLEMENTATION_COMPLETE]
+```
+
+### ✅ Step 3: IMPLEMENTATION_COMPLETE State
+```
+AI: ✓ State: IMPLEMENTATION_COMPLETE
+    [Writes AuthContext.tsx]
+    [Writes Login.tsx]
+    [Writes AuthService.ts]
+    
+    Implementation complete. Build passing.
+    May I progress to TESTING_COMPLETE?
+    
+User: Yes
+
+AI: [Runs: npx ai-workflow sync --state TESTING_COMPLETE]
+```
+
+### ✅ Step 4-6: Continue Through States...
+[TESTING_COMPLETE → REVIEW_COMPLETE → COMMIT_READY → DONE]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 QUICK DECISION TREE
+
+**Before taking ANY action, ask yourself:**
+
+```
+Q: What state am I currently in?
+A: [Check STATUS.txt]
+
+Q: What does user want me to do?
+A: [Parse request]
+
+Q: Is this action allowed in current state?
+A: [Check Quick Lookup Table above + Read state-behaviors/{STATE}.md]
+
+Decision:
+├─ If ALLOWED → Proceed
+├─ If FORBIDDEN → Explain why, suggest proper state
+└─ If UNSURE → Read full state file, then decide
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📝 FILES TO READ FOR FULL DETAILS
+
+**State-specific behavior files (read based on current state):**
+
+- `.cursor/rules/state-behaviors/UNDERSTANDING.md` (281 lines)
+- `.cursor/rules/state-behaviors/DESIGNING.md` (138 lines)
+- `.cursor/rules/state-behaviors/IMPLEMENTING.md` (112 lines)
+- `.cursor/rules/state-behaviors/TESTING.md` (88 lines)
+- `.cursor/rules/state-behaviors/REVIEWING.md` (76 lines)
+- `.cursor/rules/state-behaviors/READY_TO_COMMIT.md` (77 lines)
+
+**Each file contains:**
+- Full list of allowed actions
+- Full list of forbidden actions
+- Detailed progression protocol
+- Examples and best practices
+- Self-check guidelines
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 SUMMARY
+
+**This file provides:**
+- ✅ Quick reference for all states
+- ✅ Critical universal rules
+- ✅ State progression flow
+- ✅ Common violations to avoid
+- ✅ Pointers to full state documentation
+
+**For full details:**
+- 📖 Read `.cursor/rules/state-behaviors/{YOUR_STATE}.md`
+
+**Remember:**
+1. Check STATUS.txt first
+2. Read corresponding state-behaviors/*.md file
+3. Apply universal rules from this file
+4. Follow state-specific rules from state file
+5. Progress sequentially through states
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Priority:** 0 (HIGHEST - Read FIRST before all other .mdc files!)  
+**Version:** 2.1.0-hybrid (Static instructions + Dynamic state files)  
+**Purpose:** Provide quick reference and enforce proper workflow behavior  
+**Maintenance:** Update this file only when workflow logic changes  
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**END OF HYBRID STATE ENFORCEMENT GUIDE**

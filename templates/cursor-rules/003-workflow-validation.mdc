@@ -1,0 +1,448 @@
+---
+description: "AI Workflow Engine - Validation and ERROR HANDLING (MANDATORY)"  
+globs: "**/*"
+alwaysApply: true
+priority: 3
+version: 2.1.4
+tags: [workflow, validation, error-handling, quality, commits, mandatory]
+---
+
+# ✅ VALIDATION ENFORCEMENT
+
+⚠️  **CRITICAL:** Validation is MANDATORY before commits (alwaysApply: true)
+
+## 🚫 NEVER Suggest Commits Without Validation
+
+### Before ANY git commit suggestion:
+
+**Step 1: Check Prerequisites**
+```
+1. Current state must be: READY_TO_COMMIT
+   If not → Help progress through states first
+   
+2. No .ai-context/WARNINGS.md file
+   If exists → Fix warnings first
+```
+
+**Step 2: Run Validation**
+```bash
+npx ai-workflow validate
+```
+
+**Step 3: Check Result**
+```
+Exit code 0 → ✅ Safe to commit
+Exit code ≠ 0 → ❌ Fix issues first
+```
+
+### If Validation Passes
+
+**Safe to suggest:**
+```
+✓ Validation passed! Ready to commit:
+
+git add .
+git commit -m "feat: [description]"
+
+# After commit
+npx ai-workflow task complete
+```
+
+### If Validation Fails
+
+**DON'T suggest commit. Instead:**
+
+```
+❌ Validation failed. Issues found:
+[List validation errors]
+
+Let me help fix these issues:
+[Suggest specific fixes]
+
+After fixes, I'll validate again.
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ❌ FORBIDDEN COMMIT SUGGESTIONS
+
+**NEVER suggest these:**
+
+```
+❌ git commit --no-verify
+   Why: Bypasses validation and quality gates
+
+❌ git commit -m "WIP" or "temp" or "quick fix"
+   Why: Indicates work not complete
+
+❌ Suggesting commit when state ≠ READY_TO_COMMIT
+   Why: Quality gates not met
+
+❌ Suggesting commit without running validation
+   Why: Unknown issues might exist
+
+❌ Suggesting commit with active warnings
+   Why: Blockers must be resolved first
+```
+
+## ✅ SAFE COMMIT CHECKLIST
+
+Before suggesting ANY commit, verify:
+
+- [ ] Current state = READY_TO_COMMIT (from STATUS.txt)
+- [ ] No WARNINGS.md file exists
+- [ ] Ran: npx ai-workflow validate
+- [ ] Validation exit code = 0
+- [ ] All tests passing
+- [ ] Requirements satisfied
+
+**Only when ALL checkboxes checked → Safe to suggest commit**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔄 Validation Workflow
+
+```
+User: "Is this ready to commit?"
+
+You:
+  1. Check current state
+     State: REVIEWING → Not yet READY_TO_COMMIT
+     
+  2. Response:
+     "Not quite ready. Let me run validation:
+      npx ai-workflow validate"
+      
+  3. Run validation (simulate or ask user to run)
+  
+  4a. If passes:
+      "✓ Validation passed! Progressing to READY_TO_COMMIT.
+       Now safe to commit."
+       
+  4b. If fails:
+      "❌ Found issues: [list]
+       Let me help fix these before committing."
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💡 WHY THIS MATTERS
+
+**Without validation:**
+- Untested code committed → Bugs in production
+- Incomplete work committed → Technical debt
+- Quality gates bypassed → Compliance issues
+
+**With validation:**
+- Tested code only → Quality assured
+- Complete work only → No debt
+- Quality gates enforced → Compliance met
+
+**Validation is the LAST LINE OF DEFENSE.**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**This rule uses alwaysApply: true**  
+**Validation is MANDATORY before commits**  
+**Protects code quality and prevents regressions**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🚨 ERROR HANDLING - MANDATORY (Added v2.1.4)
+
+⚠️  **CRITICAL:** This section applies to EVERY command execution
+
+### After EVERY Command (Not Just Validate)
+
+**You MUST follow these steps after running ANY ai-workflow command:**
+
+#### Step 1: Check Exit Code
+
+**Execute command and check result:**
+
+```bash
+$ npx ai-workflow [command]
+$ echo $?  # Check exit code immediately
+```
+
+**Exit Code Interpretation:**
+```
+Exit 0 = Success → Proceed to Step 2 (verify outcome)
+Exit 1 = Error → STOP immediately, investigate (Step 4)
+```
+
+#### Step 2: Verify Expected Outcome (If Exit 0)
+
+**Ask yourself:**
+- Did the command achieve its intended goal?
+- Did task state change as expected?
+- Are files created/updated correctly?
+- Does the result make sense?
+
+**Check specific outcomes:**
+```bash
+# After task create:
+$ cat .ai-context/current-task.json  # Task exists?
+
+# After sync --state:
+$ npx ai-workflow task status  # State changed?
+
+# After validate:
+# Did it say "✅ Validation passed"?
+```
+
+#### Step 3: Sanity Check
+
+**Before declaring success, verify:**
+- ✅ Exit code is 0
+- ✅ No error messages in output
+- ✅ Expected changes occurred
+- ✅ No warnings or anomalies
+- ✅ Result makes logical sense
+
+**Only if ALL checks pass → Safe to declare success**
+
+#### Step 4: Investigate Errors (If Exit ≠ 0)
+
+**When you see non-zero exit code:**
+
+```
+🚨 STOP IMMEDIATELY!
+
+1. Read error message carefully
+2. Understand what failed
+3. Check system state:
+   $ npx ai-workflow task status
+   $ cat .ai-context/current-task.json
+4. Explain situation to user
+5. Suggest fix or ask for guidance
+6. DO NOT continue until resolved
+```
+
+### Common Commands - What to Check:
+
+#### Command: `task create`
+
+```bash
+$ npx ai-workflow task create "Goal"
+$ echo $?
+
+If 0:
+  ✅ Check: cat .ai-context/current-task.json
+  ✅ Verify: Task ID and goal present
+  ✅ Then: "Task created successfully"
+  
+If 1:
+  ❌ Error (probably: task already exists)
+  ❌ Check: Is there an existing task?
+  ❌ Action: Complete existing task first OR use --force
+```
+
+#### Command: `task complete`
+
+```bash
+$ npx ai-workflow task complete
+$ echo $?
+
+If 0 (Success):
+  Case 1: Task just completed
+    ✅ "Task completed successfully"
+    ✅ Task status = 'completed'
+    ✅ completedAt timestamp exists
+  
+  Case 2: Task already completed (v2.1.5+)
+    ✅ "Task already completed!" (not an error!)
+    ✅ Shows task info & duration
+    ✅ Suggests creating new task
+  
+If 1 (Error):
+  ❌ Error: Truly no task exists
+  ❌ Check: npx ai-workflow task status
+  ❌ Action: Create task first OR ensure at READY_TO_COMMIT state
+  
+Note: Exit 0 for "already completed" is by design (v2.1.5+)
+```
+
+#### Command: `sync --state`
+
+```bash
+$ npx ai-workflow sync --state TESTING
+$ echo $?
+
+If 0:
+  ✅ Check: Task state is now TESTING
+  ✅ Verify: State history updated
+  ✅ Then: "State updated successfully"
+  
+If 1:
+  ❌ Error (probably: invalid transition OR missing phases)
+  ❌ Read: Error message explains why
+  ❌ Action: Follow sequential progression OR complete missing phases
+```
+
+#### Command: `validate`
+
+```bash
+$ npx ai-workflow validate
+$ echo $?
+
+If 0:
+  ✅ "All validations passed"
+  ✅ Safe to progress to READY_TO_COMMIT
+  ✅ Safe to commit
+  
+If 1:
+  ❌ "Validation failed"
+  ❌ Read: What validations failed
+  ❌ Action: Fix issues before committing
+```
+
+#### Command: `sync` (no --state)
+
+```bash
+$ npx ai-workflow sync
+$ echo $?
+
+If 0:
+  ✅ "Workflow complete and synchronized"
+  ✅ No missing phases
+  ✅ Context files updated
+  
+If 1:
+  ❌ "WORKFLOW INCOMPLETE"
+  ❌ Missing phases detected
+  ❌ Action: Follow AI Flow Correction instructions
+  ❌ Complete missing phases before continuing
+```
+
+### NEVER Do This:
+
+```
+❌ BAD - Ignoring Exit Code:
+$ npx ai-workflow task complete
+✅ Task already completed!
+$ echo $?
+0
+❌ Error: Task failed!  ← WRONG! Exit code was 0 (success)!
+
+❌ BAD - Not Checking Exit Code:
+$ npx ai-workflow sync --state INVALID
+[See error message but don't check exit code]
+✅ State updated!  ← WRONG! Didn't verify!
+
+❌ BAD - Declaring Success Without Verification:
+$ npx ai-workflow validate
+✅ Validation passed!  ← Did you actually check the output?
+```
+
+### ALWAYS Do This:
+
+```
+✅ GOOD - Proper Status Checking:
+$ npx ai-workflow task complete
+✅ Task already completed!
+$ echo $?
+0
+
+🤖 Analysis:
+  Exit code: 0 (success)
+  Message: "Task already completed"
+  
+  Checking details...
+  $ npx ai-workflow task status
+  ✅ Task Completed
+  Goal: Previous task
+  Duration: 2h 30m
+  
+  Status: Task was successfully completed earlier
+  
+  Action: Create new task for new work
+  $ npx ai-workflow task create "Next task"
+  
+✅ GOOD - Handling True Errors:
+$ npx ai-workflow task complete
+❌ Error: No active task to complete
+$ echo $?
+1
+
+🤖 Analysis:
+  Exit code: 1 (error)
+  Message: "No active task to complete"
+  
+  Investigating...
+  $ npx ai-workflow task status
+  ⚠️  No active task
+  $ ls .ai-context/current-task.json
+  No such file
+  
+  Root cause: No task file exists
+  
+  Action: Create task first
+  $ npx ai-workflow task create "<goal>"
+  
+  I will NOT declare success until this is resolved.
+
+✅ GOOD - Verification Before Success:
+$ npx ai-workflow sync --state TESTING
+$ echo $?
+0
+
+🤖 Verification:
+  Exit code: 0 ✅
+  
+  Checking actual state...
+  $ npx ai-workflow task status
+  State: TESTING ✅
+  
+  Verification complete. State successfully updated.
+  ✅ Now declaring success.
+```
+
+### Quick Reference:
+
+**Exit Code Meanings:**
+- `0` = Success, command completed
+- `1` = Error, command failed
+- `2+` = Specific error codes (rare)
+
+**When to Stop:**
+- ⚠️ Exit code ≠ 0
+- ⚠️ Error message in output
+- ⚠️ Unexpected result
+- ⚠️ State didn't change
+- ⚠️ Files not updated
+- ⚠️ Something feels wrong
+
+**When to Continue:**
+- ✅ Exit code = 0
+- ✅ Success message shown
+- ✅ Expected outcome verified
+- ✅ State/files updated correctly
+- ✅ Everything makes sense
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💡 WHY ERROR HANDLING MATTERS
+
+**Without checking exit codes:**
+- AI ignores command failures
+- AI declares false success
+- Workflow becomes corrupted
+- Quality gates bypassed
+- User confused by AI behavior
+
+**With proper error handling:**
+- AI detects failures immediately
+- AI investigates before continuing
+- Workflow stays correct
+- Quality maintained
+- User trusts AI behavior
+
+**Error handling is as important as validation itself.**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**This rule uses alwaysApply: true**  
+**Error handling is MANDATORY for ALL commands**  
+**Prevents false success declarations and workflow corruption**  
+**Updated: v2.1.4-hotfix**
