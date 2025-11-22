@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Package tarballs
+*.tgz
+*.tar.gz
+
+# Backup files
+*.backup-*
+
+# Workflow temp files
+.ai-context/current-task-fixed.json
+
+# Test directories created during test execution (should not be in packages)
+**/.test-ai-context*
+**/packages/**/.ai-context/
+**/packages/**/.test-*
+
+# Compiled TypeScript files in source directory (should only be in dist/)
+# These files should never be in src/ - they are build artifacts
+**/src/**/*.js
+**/src/**/*.d.ts
+
