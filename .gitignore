@@ -1,0 +1,208 @@
+# ============================================================================
+# AI Workflow Engine - .gitignore
+# ============================================================================
+# This file defines patterns for files and directories that should be ignored
+# by Git. Organized by category for better maintainability.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Dependencies
+# ----------------------------------------------------------------------------
+node_modules/
+yarn.lock
+pnpm-lock.yaml
+package-lock.json.lock
+
+# ----------------------------------------------------------------------------
+# Build Artifacts
+# ----------------------------------------------------------------------------
+*.tsbuildinfo
+dist/
+build/
+*.map
+*.min.js
+*.min.css
+
+# Package dist folders (monorepo)
+packages/*/dist/
+packages/**/dist/
+**/packages/**/dist/
+
+# Compiled TypeScript files in source directory (should only be in dist/)
+# These files should never be in src/ - they are build artifacts
+**/src/**/*.js
+**/src/**/*.d.ts
+**/src/**/*.js.map
+
+# ----------------------------------------------------------------------------
+# Test Artifacts
+# ----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+.jest-cache/
+packages/*/.jest-cache/
+**/coverage/
+**/.jest-cache/
+test-results/
+*.spec.js
+*.test.js
+
+# Test directories created during test execution (should not be in packages)
+**/.test-ai-context*
+**/packages/**/.ai-context/
+**/packages/**/.test-*
+
+# ----------------------------------------------------------------------------
+# Logs
+# ----------------------------------------------------------------------------
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+test-*.log
+*-test.log
+test-*.txt
+*-test.txt
+
+# Specific log patterns
+test-output.log
+test-results*.log
+test-run-*.log
+test-final*.log
+performance-*.log
+*.verbose.txt
+baseline-run*.txt
+
+# ----------------------------------------------------------------------------
+# IDE & Editor Files
+# ----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+.c9/
+
+# ----------------------------------------------------------------------------
+# Operating System Files
+# ----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ----------------------------------------------------------------------------
+# Environment Variables & Secrets
+# ----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+*.pem
+*.key
+*.crt
+.secrets/
+
+# ----------------------------------------------------------------------------
+# Temporary Files
+# ----------------------------------------------------------------------------
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.cache
+
+# ----------------------------------------------------------------------------
+# Backup Files
+# ----------------------------------------------------------------------------
+*.backup
+*.backup-*
+*.old
+*.orig
+*.save
+*~
+
+# Workflow temp files
+.ai-context/current-task-fixed.json
+
+# ----------------------------------------------------------------------------
+# Package Management
+# ----------------------------------------------------------------------------
+# Package tarballs
+*.tgz
+*.tar.gz
+.npm/
+.yarn/
+.pnp/
+
+# ----------------------------------------------------------------------------
+# Documentation Build Artifacts
+# ----------------------------------------------------------------------------
+docs/_build/
+docs/.docusaurus/
+docs/node_modules/
+site/
+
+# ----------------------------------------------------------------------------
+# CI/CD Artifacts
+# ----------------------------------------------------------------------------
+.gh-pages/
+.github/workflows/artifacts/
+
+# ----------------------------------------------------------------------------
+# Project-Specific Patterns
+# ----------------------------------------------------------------------------
+# Session and summary files (often generated during development)
+SESSION_*.md
+FINAL_*.md
+*_SUMMARY.md
+*_ACHIEVEMENT*.md
+TODAY*.md
+
+# Test extraction scripts output
+test-extract*.js
+test-extract*.log
+
+# Performance profiles
+performance-profile*.txt
+
+# Known issues and failing tests tracking (can be regenerated)
+FAILING_TESTS.md
+KNOWN_ISSUES.md
+
+# Package backup files
+package.json.backup
+package.json.v*-backup
+
+# ----------------------------------------------------------------------------
+# Lock Files (Optional - uncomment if you want to ignore these)
+# ----------------------------------------------------------------------------
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
